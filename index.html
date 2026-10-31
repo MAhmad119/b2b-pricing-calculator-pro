@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+L<!DOCTYPE html>
 <html lang="en" class="dark">
 <head>
   <meta charset="UTF-8" />
@@ -21,7 +21,6 @@
     body {
       background-color: #0f172a; /* Deep Charcoal Slate Background (Zero Blue) */
     }
-    /* Hide spin buttons on numeric inputs for cleaner table look */
     input::-webkit-outer-spin-button,
     input::-webkit-inner-spin-button {
       -webkit-appearance: none;
@@ -72,7 +71,7 @@
           </tr>
         </thead>
         <tbody id="calculatorTableBody" class="divide-y divide-slate-800 bg-slate-900/50">
-          <!-- Default Dynamic Rows Injected via JavaScript -->
+          <!-- Dynamically Injected Rows -->
         </tbody>
       </table>
     </section>
@@ -91,28 +90,4 @@
         <span id="summaryText" class="text-sm text-slate-300 italic font-medium">Prepared for: Acme Corp Solutions</span>
       </div>
       <div class="text-right">
-        <span id="totalCost" class="text-3xl md:text-4xl font-bold italic text-emerald-400">$0.00 USD</span>
-      </div>
-    </section>
-
-    <!-- Action Buttons -->
-    <footer class="mt-6 flex justify-end gap-3 border-t border-slate-800 pt-4">
-      <button onclick="window.print()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-600 px-5 py-2.5 rounded text-sm italic transition flex items-center gap-2">
-        🖨️ Export / Print Proposal
-      </button>
-    </footer>
-
-  </main>
-
-  <!-- Footer Info -->
-  <footer class="text-center text-xs text-slate-500 mt-6 italic">
-    © 2026 b2b-pricing-calculator-pro. Turnkey Micro-SaaS Asset. Zero Backend Required.
-  </footer>
-
-  <!-- Application Calculation Logic -->
-  <script>
-    // Initial Item Scope Data
-    let modules = [
-      { id: 1, name: "UI/UX Prototyping & Figma System", hours: 15 },
-      { id: 2, name: "Frontend Architecture (Tailwind / JS)", hours: 35 },
-      { id: 3, name:
+        <span id="totalCost" class="text-3xl md:text-4xl font-bold italic
