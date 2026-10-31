@@ -1,92 +1,664 @@
-<html lang="en" class="dark">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>B2B Tech Stack & Quote Estimator</title>
-  
-  <!-- Tailwind CSS CDN -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>B2B Pricing Calculator Pro</title>
+
+  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
-  
-  <!-- Google Font: JetBrains Mono (Italic Monospace Spreadsheet Vibe) -->
+
+  <!-- Google Font -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@1,300;1,400;1,600;1,700&display=swap" rel="stylesheet">
-  
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
+
   <style>
     * {
       font-family: 'JetBrains Mono', monospace;
       font-style: italic;
+      box-sizing: border-box;
     }
+
+    html, body {
+      background: #0f172a !important;
+      color: #e2e8f0;
+      min-height: 100%;
+    }
+
     body {
-      background-color: #0f172a; /* Deep Charcoal Slate Background (Zero Blue) */
+      padding: 25px;
     }
-    input::-webkit-outer-spin-button,
-    input::-webkit-inner-spin-button {
-      -webkit-appearance: none;
-      margin: 0;
+
+    input, textarea {
+      background: #1e293b;
+      color: #f8fafc;
+      border: 1px solid #475569;
+      border-radius: 8px;
+      padding: 10px;
+      width: 100%;
+      outline: none;
     }
-    input[type=number] {
-      -moz-appearance: textfield;
+
+    input:focus, textarea:focus {
+      border-color: #a3e635;
+    }
+
+    input[type="number"] {
+      min-width: 75px;
+    }
+
+    .panel {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 12px;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 650px;
+    }
+
+    th {
+      background: #334155;
+      color: #bef264;
+      text-align: left;
+      padding: 15px 12px;
+      font-size: 12px;
+    }
+
+    td {
+      padding: 12px;
+      border-bottom: 1px solid #334155;
+    }
+
+    tr:hover td {
+      background: #263449;
+    }
+
+    .green {
+      color: #bef264;
+    }
+
+    .btn {
+      padding: 11px 17px;
+      border-radius: 8px;
+      font-weight: bold;
+      transition: 0.2s;
+      cursor: pointer;
+    }
+
+    .btn-add {
+      background: #bef264;
+      color: #0f172a;
+    }
+
+    .btn-add:hover {
+      background: #d9f99d;
+    }
+
+    .btn-print {
+      background: #e2e8f0;
+      color: #0f172a;
+    }
+
+    .btn-delete {
+      color: #fca5a5;
+      border: 1px solid #7f1d1d;
+      padding: 7px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .btn-delete:hover {
+      background: #7f1d1d;
+      color: white;
+    }
+
+    .total-card {
+      background: #334155;
+      border: 1px solid #64748b;
+      border-radius: 12px;
+    }
+
+    @media print {
+      @page {
+        margin: 12mm;
+      }
+
+      html, body {
+        background: #0f172a !important;
+        color: #e2e8f0 !important;
+        print-color-adjust: exact !important;
+        -webkit-print-color-adjust: exact !important;
+      }
+
+      .no-print {
+        display: none !important;
+      }
+
+      .panel, .total-card {
+        break-inside: avoid;
+      }
+
+      input, textarea {
+        border: none;
+        background: transparent !important;
+        color: #e2e8f0 !important;
+      }
+
+      table {
+        min-width: 100%;
+      }
+    }
+
+    @media(max-width: 640px) {
+      body {
+        padding: 12px;
+      }
     }
   </style>
 </head>
-<body class="text-slate-200 min-h-screen p-4 md:p-10 flex flex-col justify-between">
 
-  <!-- Main Container -->
-  <main class="max-w-4xl mx-auto w-full border border-slate-700/80 rounded-xl p-6 md:p-8 bg-slate-900/90 shadow-2xl backdrop-blur">
-    
-    <!-- Header Section -->
-    <header class="border-b border-slate-700 pb-4 mb-6 flex justify-between items-center flex-wrap gap-2">
+<body>
+
+  <main class="max-w-6xl mx-auto">
+
+    <!-- HEADER -->
+    <header class="flex flex-wrap justify-between items-center gap-4 mb-8">
+
       <div>
-        <h1 class="text-2xl md:text-3xl font-bold italic text-emerald-400">// B2B_Quote_Estimator.xlsx</h1>
-        <p class="text-xs md:text-sm text-slate-400 italic mt-1">Client-side tech stack pricing & effort scope generator.</p>
+        <p class="text-lime-300 text-xs mb-2">
+          // AGENCY WORKSPACE
+        </p>
+
+        <h1 class="text-2xl md:text-3xl font-bold green">
+          B2B PRICING PRO
+        </h1>
+
+        <p class="text-slate-400 text-xs mt-2">
+          TECH STACK & PROJECT QUOTE ESTIMATOR
+        </p>
       </div>
-      <span class="text-xs bg-emerald-950 text-emerald-400 border border-emerald-700/60 px-3 py-1 rounded-full italic font-semibold">
-        100% Client-Side SaaS
-      </span>
+
+      <div class="text-right">
+        <p class="text-slate-400 text-xs">VERSION</p>
+        <p class="green font-bold">1.0.0</p>
+      </div>
+
     </header>
 
-    <!-- Controls / Meta Inputs -->
-    <section class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-      <div>
-        <label for="clientName" class="block text-xs text-slate-400 italic mb-2">[Client / Target Company]</label>
-        <input id="clientName" type="text" value="Acme Corp Solutions" placeholder="Client Name" class="w-full bg-slate-800/80 border border-slate-700 rounded p-3 text-sm focus:border-emerald-500 outline-none italic text-slate-100 transition" oninput="updateCalculations()" />
+
+    <!-- PROJECT INFORMATION -->
+    <section class="panel p-5 mb-6">
+
+      <h2 class="green text-sm font-bold mb-4">
+        // PROJECT INFORMATION
+      </h2>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+        <div>
+          <label class="text-xs text-slate-400 block mb-2">
+            CLIENT NAME
+          </label>
+          <input type="text" id="clientName"
+                 placeholder="Enter client name">
+        </div>
+
+        <div>
+          <label class="text-xs text-slate-400 block mb-2">
+            PROJECT NAME
+          </label>
+          <input type="text" id="projectName"
+                 placeholder="Enter project name">
+        </div>
+
       </div>
-      <div>
-        <label for="hourlyRate" class="block text-xs text-slate-400 italic mb-2">[Agency Hourly Rate ($ USD)]</label>
-        <input id="hourlyRate" type="number" value="60" min="0" class="w-full bg-slate-800/80 border border-slate-700 rounded p-3 text-sm focus:border-emerald-500 outline-none italic text-slate-100 transition" oninput="updateCalculations()" />
-      </div>
+
     </section>
 
-    <!-- Spreadsheet Matrix Table -->
-    <section class="border border-slate-700 rounded-lg overflow-x-auto mb-6">
-      <table class="w-full text-left text-sm italic">
-        <thead class="bg-slate-800 text-slate-400 border-b border-slate-700">
-          <tr>
-            <th class="p-3">MODULE / TECH SCOPE</th>
-            <th class="p-3 text-center">EST. HOURS</th>
-            <th class="p-3 text-right">CALCULATED COST ($)</th>
-            <th class="p-3 text-center w-12">ACTION</th>
-          </tr>
-        </thead>
-        <tbody id="calculatorTableBody" class="divide-y divide-slate-800 bg-slate-900/50">
-          <!-- Dynamically Injected Rows -->
-        </tbody>
-      </table>
+
+    <!-- HOURLY RATE -->
+    <section class="panel p-5 mb-6">
+
+      <h2 class="green text-sm font-bold mb-4">
+        // AGENCY CONFIGURATION
+      </h2>
+
+      <div class="max-w-sm">
+
+        <label class="text-xs text-slate-400 block mb-2">
+          AGENCY HOURLY RATE ($)
+        </label>
+
+        <input type="number"
+               id="hourlyRate"
+               value="50"
+               min="0"
+               step="0.01">
+
+        <p class="text-xs text-slate-500 mt-2">
+          Rate is automatically applied to every module.
+        </p>
+
+      </div>
+
     </section>
 
-    <!-- Add Row Controls -->
-    <div class="mb-6">
-      <button onclick="addNewRow()" class="bg-slate-800 hover:bg-slate-700 text-emerald-400 border border-slate-700 hover:border-emerald-500/50 px-4 py-2 rounded text-xs italic transition flex items-center gap-2">
-        <span>+</span> Add Custom Module
+
+    <!-- PRICING TABLE -->
+    <section class="panel p-4 md:p-6 mb-6">
+
+      <div class="flex flex-wrap justify-between items-center gap-3 mb-5">
+
+        <div>
+          <h2 class="green font-bold">
+            PROJECT SCOPE
+          </h2>
+
+          <p class="text-xs text-slate-400 mt-1">
+            Manage your technical modules and costs.
+          </p>
+        </div>
+
+        <button class="btn btn-add no-print"
+                id="addModule">
+          + Add Custom Module
+        </button>
+
+      </div>
+
+
+      <div class="table-wrap">
+
+        <table>
+
+          <thead>
+            <tr>
+              <th>MODULE / SERVICE</th>
+              <th>DESCRIPTION</th>
+              <th>HOURS</th>
+              <th>RATE</th>
+              <th>SUBTOTAL</th>
+              <th class="no-print">ACTION</th>
+            </tr>
+          </thead>
+
+          <!-- DEFAULT ROWS ARE ALREADY PRESENT -->
+          <tbody id="moduleTable">
+
+            <tr>
+              <td>
+                <input value="UI/UX Prototyping"
+                       class="module-name">
+              </td>
+
+              <td>
+                <input value="Wireframes & UI Design"
+                       class="module-description">
+              </td>
+
+              <td>
+                <input type="number" value="20"
+                       min="0" step="0.5"
+                       class="module-hours">
+              </td>
+
+              <td class="rate-cell green">$50.00</td>
+
+              <td class="subtotal green">$1,000.00</td>
+
+              <td class="no-print">
+                <button class="btn-delete delete-row">
+                  Delete
+                </button>
+              </td>
+            </tr>
+
+            <tr>
+              <td>
+                <input value="Frontend Architecture"
+                       class="module-name">
+              </td>
+
+              <td>
+                <input value="Frontend Development"
+                       class="module-description">
+              </td>
+
+              <td>
+                <input type="number" value="35"
+                       min="0" step="0.5"
+                       class="module-hours">
+              </td>
+
+              <td class="rate-cell green">$50.00</td>
+
+              <td class="subtotal green">$1,750.00</td>
+
+              <td class="no-print">
+                <button class="btn-delete delete-row">
+                  Delete
+                </button>
+              </td>
+            </tr>
+
+            <tr>
+              <td>
+                <input value="API Integrations"
+                       class="module-name">
+              </td>
+
+              <td>
+                <input value="Third-party API Setup"
+                       class="module-description">
+              </td>
+
+              <td>
+                <input type="number" value="15"
+                       min="0" step="0.5"
+                       class="module-hours">
+              </td>
+
+              <td class="rate-cell green">$50.00</td>
+
+              <td class="subtotal green">$750.00</td>
+
+              <td class="no-print">
+                <button class="btn-delete delete-row">
+                  Delete
+                </button>
+              </td>
+            </tr>
+
+            <tr>
+              <td>
+                <input value="QA Testing"
+                       class="module-name">
+              </td>
+
+              <td>
+                <input value="Quality Assurance"
+                       class="module-description">
+              </td>
+
+              <td>
+                <input type="number" value="10"
+                       min="0" step="0.5"
+                       class="module-hours">
+              </td>
+
+              <td class="rate-cell green">$50.00</td>
+
+              <td class="subtotal green">$500.00</td>
+
+              <td class="no-print">
+                <button class="btn-delete delete-row">
+                  Delete
+                </button>
+              </td>
+            </tr>
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+    </section>
+
+
+    <!-- TOTALS -->
+    <section class="total-card p-5 md:p-6 mb-6">
+
+      <h2 class="green font-bold mb-5">
+        // PROJECT SUMMARY
+      </h2>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+
+        <div>
+          <p class="text-xs text-slate-400">
+            TOTAL PROJECT HOURS
+          </p>
+
+          <p class="text-2xl font-bold mt-2"
+             id="totalHours">
+            80
+          </p>
+        </div>
+
+        <div>
+          <p class="text-xs text-slate-400">
+            TOTAL MODULES
+          </p>
+
+          <p class="text-2xl font-bold mt-2"
+             id="totalModules">
+            4
+          </p>
+        </div>
+
+      </div>
+
+      <div class="border-t border-slate-500 my-5"></div>
+
+      <div class="flex flex-wrap justify-between items-center gap-3">
+
+        <div>
+          <p class="text-xs text-slate-400">
+            GRAND TOTAL
+          </p>
+
+          <p class="text-3xl md:text-4xl green font-bold mt-2"
+             id="grandTotal">
+            $4,000.00
+          </p>
+        </div>
+
+        <span class="text-xs text-lime-300">
+          USD / PROJECT
+        </span>
+
+      </div>
+
+    </section>
+
+
+    <!-- ACTION BUTTONS -->
+    <section class="flex flex-wrap gap-3 justify-between no-print">
+
+      <button class="btn btn-add"
+              id="addModuleBottom">
+        + Add Module
       </button>
-    </div>
 
-    <!-- Summary Output Card -->
-    <section class="border-t border-slate-700 pt-6 flex flex-col md:flex-row justify-between items-center gap-4">
-      <div>
-        <span class="text-xs text-slate-400 block italic">// TOTAL ESTIMATED PROPOSAL</span>
-        <span id="summaryText" class="text-sm text-slate-300 italic font-medium">Prepared for: Acme Corp Solutions</span>
-      </div>
-      <div class="text-right">
-        <span id="totalCost" class="text-3xl md:text-4xl font-bold italic
+      <button class="btn btn-print"
+              id="printProposal">
+        Export / Print Proposal
+      </button>
+
+    </section>
+
+
+    <footer class="text-center text-xs text-slate-500 mt-10">
+      B2B PRICING PRO © 2026
+      <p class="mt-2">
+        BUILT FOR AGENCIES & FREELANCERS
+      </p>
+    </footer>
+
+  </main>
+
+
+  <!-- VANILLA JAVASCRIPT -->
+  <script>
+
+    const table = document.getElementById("moduleTable");
+
+    const hourlyRateInput =
+      document.getElementById("hourlyRate");
+
+    const grandTotal =
+      document.getElementById("grandTotal");
+
+    const totalHours =
+      document.getElementById("totalHours");
+
+    const totalModules =
+      document.getElementById("totalModules");
+
+
+    // FORMAT USD
+    function formatCurrency(amount) {
+      return new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "USD"
+      }).format(amount);
+    }
+
+
+    // CALCULATE ALL TOTALS
+    function calculateTotals() {
+
+      const rate = Math.max(
+        0,
+        Number(hourlyRateInput.value) || 0
+      );
+
+      let hours = 0;
+      let total = 0;
+
+      const rows = table.querySelectorAll("tr");
+
+      rows.forEach(row => {
+
+        const hoursInput =
+          row.querySelector(".module-hours");
+
+        if (!hoursInput) return;
+
+        const moduleHours = Math.max(
+          0,
+          Number(hoursInput.value) || 0
+        );
+
+        const subtotal = moduleHours * rate;
+
+        hours += moduleHours;
+        total += subtotal;
+
+        row.querySelector(".rate-cell").textContent =
+          formatCurrency(rate);
+
+        row.querySelector(".subtotal").textContent =
+          formatCurrency(subtotal);
+
+      });
+
+      totalHours.textContent = hours.toLocaleString("en-US");
+
+      totalModules.textContent = rows.length;
+
+      grandTotal.textContent = formatCurrency(total);
+
+    }
+
+
+    // ADD CUSTOM MODULE
+    function addModule() {
+
+      const row = document.createElement("tr");
+
+      row.innerHTML = `
+        <td>
+          <input value="Custom Module"
+                 class="module-name">
+        </td>
+
+        <td>
+          <input value="Custom Service"
+                 class="module-description">
+        </td>
+
+        <td>
+          <input type="number"
+                 value="5"
+                 min="0"
+                 step="0.5"
+                 class="module-hours">
+        </td>
+
+        <td class="rate-cell green">$0.00</td>
+
+        <td class="subtotal green">$0.00</td>
+
+        <td class="no-print">
+          <button class="btn-delete delete-row">
+            Delete
+          </button>
+        </td>
+      `;
+
+      table.appendChild(row);
+
+      calculateTotals();
+
+    }
+
+
+    // ADD BUTTONS
+    document.getElementById("addModule")
+      .addEventListener("click", addModule);
+
+    document.getElementById("addModuleBottom")
+      .addEventListener("click", addModule);
+
+
+    // DELETE ROW USING EVENT DELEGATION
+    table.addEventListener("click", function(event) {
+
+      if (event.target.classList.contains("delete-row")) {
+
+        event.target.closest("tr").remove();
+
+        calculateTotals();
+
+      }
+
+    });
+
+
+    // REAL-TIME INPUT CALCULATIONS
+    table.addEventListener("input", calculateTotals);
+
+    hourlyRateInput.addEventListener(
+      "input",
+      calculateTotals
+    );
+
+
+    // PRINT PROPOSAL
+    document.getElementById("printProposal")
+      .addEventListener("click", function() {
+
+        calculateTotals();
+
+        window.print();
+
+      });
+
+
+    // INITIAL CALCULATION
+    calculateTotals();
+
+  </script>
+
+</body>
+</html>
